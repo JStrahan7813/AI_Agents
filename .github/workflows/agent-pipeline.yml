@@ -20,16 +20,20 @@ jobs:
     - name: 📦 Build Local Workspace Project Structure
       run: |
         if [ ! -f package.json ]; then npm init -y; fi
-        npm install @playwright/test openai
+        npm install @playwright/test openai @google/genai
         npx playwright install --with-deps
 
-    - name: 🔮 Step 1 Execute First Agent
+    - name: 🔮 Step 1: Execute First Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
-      env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
+      env: 
+        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    - name: 🛠️ Step 2 Execute Second Sequential Agent
+    - name: 🛠️ Step 2: Execute Second Sequential Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
-      env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
+      env: 
+        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    - name: 🎭 Step 3 Run Playwright Native Verification Tests
+    - name: 🎭 Step 3: Run Playwright Native Verification Tests
       run: npx playwright test *.spec.js --reporter=list
