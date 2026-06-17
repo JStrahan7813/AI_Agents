@@ -27,19 +27,12 @@ jobs:
     - name: 🔮 Step 1: Execute First Agent
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: |
-        echo "Launching agent using the new clean folder architecture..."
-        # Updated path to look directly inside your clean .github folders:
-        node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
 
     - name: 🛠️ Step 2: Execute Second Sequential Agent
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      run: |
-        echo "Running downstream verification..."
-        # Updated path to look directly inside your clean .github folders:
-        node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
 
     - name: 🎭 Step 3: Run Playwright Native Verification Tests
-      run: |
-        npx playwright test --reporter=list
+      run: npx playwright test --reporter=list
