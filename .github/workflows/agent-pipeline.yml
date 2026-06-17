@@ -3,7 +3,7 @@ name: Generic Dynamic AI Agent Pipeline
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   execute-pipeline:
