@@ -1,0 +1,33 @@
+allure-results/
+allure-report/
+playwright-report/
+blob-report/
+test-results/
+node_modules/
+.env
+playwright/.cache/
+.env
+# Ignore everything except .github/agents and documentation directories
+/*
+
+# Keep this file
+!.gitignore
+
+# Root readme (repo overview)
+!/README.md
+
+# Only allow the agents subtree inside .github
+!.github/
+.github/*
+!.github/agents/
+!.github/agents/**
+
+# Allow documentation directory and all contents
+!documentation/
+!documentation/**
+
+# Allow Cursor skills (project skills to be committed)
+!.cursor/
+.cursor/*
+!.cursor/skills/
+!.cursor/skills/**
