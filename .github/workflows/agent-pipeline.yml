@@ -15,19 +15,19 @@ jobs:
     - name: 🟢 Setup Node.js Context
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24'
 
     - name: 📦 Build Local Workspace Project Structure
       run: |
         if [ ! -f package.json ]; then npm init -y; fi
-        npm install @playwright/test
+        npm install @playwright/test openai
         npx playwright install --with-deps
 
     - name: 🔮 Step 1 Execute First Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
       env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
 
-    - name: 🛠️ Step 2  Execute Second Sequential Agent
+    - name: 🛠️ Step 2 Execute Second Sequential Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
       env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
 
