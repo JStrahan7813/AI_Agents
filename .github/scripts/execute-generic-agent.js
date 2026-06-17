@@ -2,6 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
+// ➕ Import the official OpenAI SDK wrapper
+let OpenAI;
+try {
+    OpenAI = require('openai').OpenAI;
+} catch (e) {
+    console.error("❌ Error: 'openai' package is missing. Run 'npm install openai' in your project root.");
+    process.exit(1);
+}
+
 const agentPath = process.argv[2];
 const mcpPackage = process.env.MCP_PACKAGE_TARGET; 
 
@@ -51,11 +60,54 @@ if (!fs.existsSync(fullPath)) {
 const agentRules = fs.readFileSync(fullPath, 'utf8');
 console.log(`🤖 Executing Agent Persona Architecture: ${path.basename(fullPath)}`);
 
-// Clean down background process loops elegantly
-if (childServer) {
-    childServer.kill();
-    console.log("📡 Stdio communication channel closed cleanly.");
+// 🚀 --- NEW LIVE AI PIPELINE ENGINE EXECUTION STEP ---
+async function contactAIEngine() {
+    if (!process.env.OPENAI_API_KEY) {
+        console.error("❌ Error: OPENAI_API_KEY is not defined in the step environment.");
+        return;
+    }
+
+    try {
+        console.log("🧠 Sending persona payload instructions to OpenAI...");
+        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [
+                { 
+                    role: "system", 
+                    content: "You are an automated code generator inside a Playwright CI/CD pipeline. Your output MUST be raw, executable JavaScript Playwright test code. Do not wrap code blocks in markdown fences like ```javascript or write conversational commentary. Output pure JS code only." 
+                },
+                { 
+                    role: "user", 
+                    content: `Please follow these specialized instruction behaviors and generate our automated testing suite scripts:\n\n${agentRules}` 
+                }
+            ],
+            temperature: 0.2
+        });
+
+        const generatedCode = completion.choices[0].message.content.trim();
+        
+        // 💾 Save the generated response directly onto the disk root workspace for Step 3 to read
+        const targetOutputFilename = 'generated_test.spec.js';
+        fs.writeFileSync(targetOutputFilename, generatedCode, 'utf8');
+        console.log(`💾 Success! Agent script execution generated and saved cleanly to: ${targetOutputFilename}`);
+
+    } catch (apiError) {
+        console.error("❌ Failed to gather code construction parameters from OpenAI:", apiError.message);
+    }
 }
 
-console.log("✅ Pipeline step run completed.");
-process.exit(0);
+// Wrap the completion execution loop safely inside an async context frame 
+(async () => {
+    await contactAIEngine();
+
+    // Clean down background process loops elegantly
+    if (childServer) {
+        childServer.kill();
+        console.log("📡 Stdio communication channel closed cleanly.");
+    }
+
+    console.log("✅ Pipeline step run completed.");
+    process.exit(0);
+})();
