@@ -25,7 +25,7 @@ jobs:
 
     # ⚙️ STEP 1: INITIAL CONFIGURATION AND SETUP
     - name: ⚙️ Step 1 Run Setup Agent
-      run: node .github/scripts/execute-generic-agent.js .github/agents/test_setup_agent.md
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_setup.agent.md
       env: 
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
