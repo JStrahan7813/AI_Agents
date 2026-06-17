@@ -23,18 +23,45 @@ jobs:
         npm install @playwright/test openai @google/genai
         npx playwright install --with-deps
 
-    - name: 🔮 Step 1 Execute First Agent
+    # ⚙️ STEP 1: INITIAL CONFIGURATION AND SETUP
+    - name: ⚙️ Step 1 Run Setup Agent
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_setup_agent.md
+      env: 
+        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
+
+    # 🏃‍♂️ STEP 2: TEST RUNNER PREPARATION (Fixed Dash Filename)
+    - name: 🏃‍♂️ Step 2 Run Runner Agent
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_runner-agent.md
+      env: 
+        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
+        GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
+
+    # 🔮 STEP 3: GENERATE SCRIPT SKELETONS
+    - name: 🔮 Step 3  Run Scripter Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
       env: 
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    - name: 🛠️ Step 2 Execute Second Sequential Agent
+    # 🛠️ STEP 4: CODE ANALYSIS AND PATCH ASSERTIONS
+    - name: 🛠️ Step 4 Run Fixer Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
       env: 
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    - name: 🎭 Step 3 Run Playwright Native Verification Tests
+    # 🔍 PIPELINE DEBUGGER
+    - name: 🔍 Debug Print Generated Agent File Contents
+      run: |
+        echo "=== START OF GENERATED FILE ==="
+        cat generated_test.spec.js || echo "No file created yet!"
+        echo "=== END OF GENERATED FILE ==="
+
+    # 🎭 STEP 5: RUN PLAYWRIGHT VERIFICATION
+    - name: 🎭 Step 5 Run Playwright Native Verification Tests
       run: npx playwright test generated_test.spec.js --reporter=list
-      
+
+    # 🎭 STEP 5: RUN PLAYWRIGHT VERIFICATION
+    - name: 🎭 Step 5: Run Playwright Native Verification Tests
+      run: npx playwright test generated_test.spec.js --reporter=list
