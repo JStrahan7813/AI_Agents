@@ -63,5 +63,5 @@ jobs:
       run: npx playwright test generated_test.spec.js --reporter=list
 
     # 🎭 STEP 5: RUN PLAYWRIGHT VERIFICATION
-    - name: 🎭 Step 5: Run Playwright Native Verification Tests
+    - name: 🎭 Step 5 Run Playwright Native Verification Tests
       run: npx playwright test generated_test.spec.js --reporter=list
