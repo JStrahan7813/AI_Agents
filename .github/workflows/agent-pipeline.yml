@@ -60,4 +60,4 @@ jobs:
 
     # 🎭 STEP 5: RUN PLAYWRIGHT VERIFICATION (.mjs Update)
     - name: 🎭 Step 5 Run Playwright Native Verification Tests
-      run: npx playwright test generated_test.spec.mjs --reporter=list
+      run: npx playwright test --test-match="generated_test.spec.mjs" --reporter=list
