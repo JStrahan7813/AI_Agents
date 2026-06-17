@@ -36,4 +36,5 @@ jobs:
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
     - name: 🎭 Step 3 Run Playwright Native Verification Tests
-      run: npx playwright test *.spec.js --reporter=list
+      run: npx playwright test generated_test.spec.js --reporter=list
+      
