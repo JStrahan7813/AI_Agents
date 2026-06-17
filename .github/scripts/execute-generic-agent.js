@@ -2,6 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 
+// Import the official OpenAI SDK wrapper
+let OpenAI;
+try {
+    OpenAI = require('openai').OpenAI;
+} catch (e) {
+    console.error("❌ Error: 'openai' package is missing. Run 'npm install openai' in your project root.");
+    process.exit(1);
+}
+
 const agentPath = process.argv[2];
 const mcpPackage = process.env.MCP_PACKAGE_TARGET; 
 
@@ -61,9 +70,13 @@ async function contactAIEngine() {
                 config: { temperature: 0.2 }
             });
 
-            const generatedCode = response.text.trim();
+            let generatedCode = response.text.trim();
+
+            // 🧼 CLEANER: Strip away any rogue markdown backticks if Gemini added them
+            generatedCode = generatedCode.replace(/^```[a-zA-Z]*\n/gm, '').replace(/```$/gm, '').trim();
+
             fs.writeFileSync(targetOutputFilename, generatedCode, 'utf8');
-            console.log(`💾 Success via Gemini! Saved to: ${targetOutputFilename}`);
+            console.log(`💾 Success via Gemini! Cleaned and saved to: ${targetOutputFilename}`);
             return;
         } catch (geminiError) {
             console.error("❌ Gemini generation failed:", geminiError.message);
@@ -75,7 +88,6 @@ async function contactAIEngine() {
     if (process.env.OPENAI_API_KEY) {
         try {
             console.log("🧠 Sending payload to OpenAI...");
-            const { OpenAI } = require('openai');
             const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
             
             const completion = await openai.chat.completions.create({
@@ -87,9 +99,13 @@ async function contactAIEngine() {
                 temperature: 0.2
             });
 
-            const generatedCode = completion.choices[0].message.content.trim();
+            let generatedCode = completion.choices[0].message.content.trim();
+
+            // 🧼 CLEANER: Strip away any rogue markdown backticks if OpenAI added them
+            generatedCode = generatedCode.replace(/^```[a-zA-Z]*\n/gm, '').replace(/```$/gm, '').trim();
+
             fs.writeFileSync(targetOutputFilename, generatedCode, 'utf8');
-            console.log(`💾 Success via OpenAI! Saved to: ${targetOutputFilename}`);
+            console.log(`💾 Success via OpenAI! Cleaned and saved to: ${targetOutputFilename}`);
         } catch (apiError) {
             console.error("❌ OpenAI generation failed:", apiError.message);
         }
