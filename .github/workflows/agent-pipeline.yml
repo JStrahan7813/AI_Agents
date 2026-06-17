@@ -23,11 +23,11 @@ jobs:
         npm install @playwright/test
         npx playwright install --with-deps
 
-    - name: 🔮 Step 1: Execute First Agent
+    - name: 🔮 Step 1 Execute First Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
       env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
 
-    - name: 🛠️ Step 2: Execute Second Sequential Agent
+    - name: 🛠️ Step 2  Execute Second Sequential Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
       env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
 
