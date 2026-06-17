@@ -53,7 +53,7 @@ console.log(`🤖 Executing Agent Persona Architecture: ${path.basename(fullPath
 
 // --- LIVE AI PIPELINE ENGINE ---
 async function contactAIEngine() {
-    const targetOutputFilename = 'generated_test.spec.js';
+    const targetOutputFilename = 'generated_test.spec.mjs';
     const systemPrompt = "You are an automated code generator inside a Playwright CI/CD pipeline. Your output MUST be raw, executable JavaScript Playwright test code. Do not wrap code blocks in markdown fences like ```javascript or write conversational commentary. Output pure JS code only.";
     const userPrompt = `Please follow these specialized instruction behaviors and generate our automated testing suite scripts:\n\n${agentRules}`;
 
