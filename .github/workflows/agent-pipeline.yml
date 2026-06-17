@@ -24,30 +24,20 @@ jobs:
         npm install @playwright/test
         npx playwright install --with-deps
 
-    - name: 🔮 Step 1: Execute First Agent with Ephemeral Runtime Secrets
+    - name: 🔮 Step 1: Execute First Agent
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        AZURE_DEVOPS_PAT: ${{ secrets.AZURE_DEVOPS_PAT }}
       run: |
-        echo "Creating dynamic temporary configurations in memory..."
-        
-        MOCK_SYS_HASH=$(echo -n "${{ github.sha }}-${{ github.run_id }}" | sha256sum | head -c 32)
-        echo "Generated Ephemeral Pipeline Token Reference: ${MOCK_SYS_HASH}"
-        
-        NODE_ENV=production \
-        MCP_PACKAGE_TARGET="@azure-devops/mcp" \
-        AGENT_TARGET_ORG="https://dev.azure.com/DynamicOrg-${{ github.run_id }}" \
-        AGENT_SECURITY_KEY="tmp_token_${MOCK_SYS_HASH}" \
+        echo "Launching agent using the new clean folder architecture..."
+        # Updated path to look directly inside your clean .github folders:
         node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
 
     - name: 🛠️ Step 2: Execute Second Sequential Agent
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
-        echo "Running downstream verification sequence..."
-        
-        NODE_ENV=production \
-        AGENT_SYSTEM_SCOPE="local-refactor-mode" \
+        echo "Running downstream verification..."
+        # Updated path to look directly inside your clean .github folders:
         node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
 
     - name: 🎭 Step 3: Run Playwright Native Verification Tests
