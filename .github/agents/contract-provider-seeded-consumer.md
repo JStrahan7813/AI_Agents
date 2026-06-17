@@ -1,5 +1,5 @@
 ---
-name: contract-provider-seeded-consumer
+name: contract-provider-seeded-consumer 
 description: Helps provider teams derive initial consumer-side Pact contracts by scanning provider APIs. Use when creating consumer-side Pact contracts from a provider repo, seeding consumer contract tests when no real consumer exists, or when the user asks for consumer contracts, provider-seeded contracts, or Pact consumer tests
 tools: ['vscode', 'execute', 'read', 'edit', 'search', 'todo']
 ---
