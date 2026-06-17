@@ -31,5 +31,5 @@ jobs:
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
       env: { OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}" }
 
-    - name: 🎭 Step 3: Run Playwright Native Verification Tests
+    - name: 🎭 Step 3 Run Playwright Native Verification Tests
       run: npx playwright test --reporter=list
