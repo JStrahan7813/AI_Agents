@@ -3,7 +3,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 const agentPath = process.argv[2];
-const mcpPackage = process.env.MCP_PACKAGE_TARGET;
+const mcpPackage = process.env.MCP_PACKAGE_TARGET; 
 
 if (!agentPath) {
     console.error("❌ Error: Missing configuration agent target file path.");
