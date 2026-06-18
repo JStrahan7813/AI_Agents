@@ -9,7 +9,7 @@ try {
 } catch (e) {
     console.error("❌ Error: 'openai' package is missing. Run 'npm install openai' in your project root.");
     process.exit(1);
-} 
+}  
 
 const agentPath = process.argv[2];
 const mcpPackage = process.env.MCP_PACKAGE_TARGET; 
