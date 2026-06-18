@@ -17,7 +17,7 @@ const mcpPackage = process.env.MCP_PACKAGE_TARGET;
 if (!agentPath) {
     console.error("❌ Error: Missing configuration agent target file path.");
     process.exit(1);
-}
+} 
 
 console.log("⚙️ Initializing decoupled automation context wrapper...");
 console.log("📊 Active Environmental Variables registered inside this step runtime:");
