@@ -30,23 +30,18 @@ jobs:
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    # 🏃‍♂️ STEP 2: TEST RUNNER PREPARATION
-    - name: 🏃‍♂️ Step 2 Run Runner Agent
-      run: node .github/scripts/execute-generic-agent.js .github/agents/test_runner-agent.md
-      env: 
-        OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
-        GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
+   
 
-    # 🔮 STEP 3: GENERATE SCRIPT SKELETONS
-    - name: 🔮 Step 3 Run Scripter Agent
+    # 🔮 STEP 2: GENERATE SCRIPT SKELETONS
+    - name: 🔮 Step 2 Run Scripter Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
       env: 
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-    # 🛠️ STEP 4: CODE ANALYSIS AND PATCH ASSERTIONS
-    - name: 🛠️ Step 4 Run Fixer Agent
-      run: node .github/scripts/execute-generic-agent.js .github/agents/test_fixer.agent.md
+    # 🏃‍♂️ STEP 3: TEST RUNNER PREPARATION
+    - name: 🏃‍♂️ Step 3 Run Runner Agent
+      run: node .github/scripts/execute-generic-agent.js .github/agents/test_runner-agent.md
       env: 
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
@@ -65,6 +60,6 @@ jobs:
         echo "export default defineConfig({ testMatch: 'generated_test.spec.mjs' });" >> playwright.config.js
         echo "✅ Playwright configuration file injected successfully."
 
-    # 🎭 STEP 5: RUN PLAYWRIGHT VERIFICATION
-    - name: 🎭 Step 5 Run Playwright Native Verification Tests
+    # 🎭 STEP 4: RUN PLAYWRIGHT VERIFICATION
+    - name: 🎭 Step 4 Run Playwright Native Verification Tests
       run: npx playwright test --reporter=list
