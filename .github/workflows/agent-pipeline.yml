@@ -30,8 +30,6 @@ jobs:
         OPENAI_API_KEY: "${{ secrets.OPENAI_API_KEY }}"
         GEMINI_API_KEY: "${{ secrets.GEMINI_API_KEY }}"
 
-   
-
     # 🔮 STEP 2: GENERATE SCRIPT SKELETONS
     - name: 🔮 Step 2 Run Scripter Agent
       run: node .github/scripts/execute-generic-agent.js .github/agents/test_scripter.agent.md
@@ -50,16 +48,10 @@ jobs:
     - name: 🔍 Debug Print Generated Agent File Contents
       run: |
         echo "=== START OF GENERATED FILE ==="
-        cat generated_test.spec.mjs || echo "No file created yet!"
+        cat generated_test.spec.js || echo "No file created yet!"
         echo "=== END OF GENERATED FILE ==="
 
-    # 🛠️ INJECT PLAYWRIGHT EXTENSION OVERRIDE CONFIGURATION
-    - name: 🏗️ Setup Playwright Matcher Engine
-      run: |
-        echo "import { defineConfig } from '@playwright/test';" > playwright.config.js
-        echo "export default defineConfig({ testMatch: 'generated_test.spec.mjs' });" >> playwright.config.js
-        echo "✅ Playwright configuration file injected successfully."
-
     # 🎭 STEP 4: RUN PLAYWRIGHT VERIFICATION
+    # Direct file execution path targeting the fixed .js extension
     - name: 🎭 Step 4 Run Playwright Native Verification Tests
-      run: npx playwright test generated_test.spec.mjs --reporter=list
+      run: npx playwright test generated_test.spec.js --reporter=list
