@@ -53,9 +53,12 @@ console.log(`🤖 Executing Agent Persona Architecture: ${path.basename(fullPath
 
 // --- LIVE AI PIPELINE ENGINE ---
 async function contactAIEngine() {
-    const targetOutputFilename = 'generated_test.spec.mjs';
-    const systemPrompt = "You are an automated code generator inside a Playwright CI/CD pipeline. Your output MUST be raw, executable JavaScript Playwright test code. Do not wrap code blocks in markdown fences like ```javascript or write conversational commentary. Output pure JS code only.";
+    // 🌟 Standardized on .js to match the CommonJS output natively
+    const targetOutputFilename = 'generated_test.spec.js';
+    const systemPrompt = "You are an automated code generator inside a Playwright CI/CD pipeline. Your output MUST be raw, executable JavaScript Playwright test code. Do not wrap code blocks in markdown fences like ```javascript or write conversational commentary. Output pure JS code using CommonJS (require) format only.";
     const userPrompt = `Please follow these specialized instruction behaviors and generate our automated testing suite scripts:\n\n${agentRules}`;
+
+    let generationSuccess = false;
 
     // 🌟 ROUTE TO GEMINI IF AVAILABLE
     if (process.env.GEMINI_API_KEY) {
@@ -77,15 +80,19 @@ async function contactAIEngine() {
 
             fs.writeFileSync(targetOutputFilename, generatedCode, 'utf8');
             console.log(`💾 Success via Gemini! Cleaned and saved to: ${targetOutputFilename}`);
+            generationSuccess = true;
             return;
         } catch (geminiError) {
             console.error("❌ Gemini generation failed:", geminiError.message);
-            return;
+            if (process.env.OPENAI_API_KEY) {
+                console.log("🔄 Automatic Failover triggered: Routing request to OpenAI Engine...");
+            }
+            // Removed the blank 'return;' so the loop cascades down to the OpenAI block below
         }
     }
 
-    // 🔄 FALLBACK TO OPENAI
-    if (process.env.OPENAI_API_KEY) {
+    // 🔄 FALLBACK TO OPENAI (Will run if Gemini isn't configured, OR if Gemini fails with a 503)
+    if (!generationSuccess && process.env.OPENAI_API_KEY) {
         try {
             console.log("🧠 Sending payload to OpenAI...");
             const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -106,13 +113,18 @@ async function contactAIEngine() {
 
             fs.writeFileSync(targetOutputFilename, generatedCode, 'utf8');
             console.log(`💾 Success via OpenAI! Cleaned and saved to: ${targetOutputFilename}`);
+            generationSuccess = true;
         } catch (apiError) {
             console.error("❌ OpenAI generation failed:", apiError.message);
         }
         return;
     }
 
-    console.error("❌ Error: Neither GEMINI_API_KEY nor OPENAI_API_KEY is configured.");
+    if (!generationSuccess) {
+        console.error("❌ Critical Error: Neither AI engine completed successfully, or no API keys were configured.");
+        if (childServer) childServer.kill();
+        process.exit(1);
+    }
 }
 
 (async () => {
