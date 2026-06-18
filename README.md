@@ -8,7 +8,7 @@ The repository supports two stacks: **Visual Studio Code + GitHub Copilot** and 
 
 This repository utilizes a multi-agent AI workforce running inside a GitHub Actions workflow (`.github/workflows/agent-pipeline.yml`). Instead of executing standalone tasks, the agents operate like an assembly line, where each agent acts as a specialized data transformer that passes its output downstream to the next step.
 
-Please note it alos includes Desktop Literacy Agent: A self-healing SDET bot that automates and optimizes Windows UI testing for the Read&Write assistive toolbar. It scans test files for fragile locators, inspects the live WinAppDriver/Appium XML DOM to automatically fix broken selectors, and handles multi-process desktop window switching seamlessly.
+Please note it also includes Desktop Literacy Agent: A self-healing SDET bot that automates and optimizes Windows UI testing for desktop apps. It scans test files for fragile locators, inspects the live WinAppDriver/Appium XML DOM to automatically fix broken selectors, and handles multi-process desktop window switching seamlessly.
 This was written by myself to address the need to have an AI Agent that dealt with the challenges of desktop automation. It is a prototype which was used to write a FLAUI agent which helped write tests in C# for native Windows desktop apps in later iterations.
 
 
