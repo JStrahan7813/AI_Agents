@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 // Import the official OpenAI SDK wrapper
 let OpenAI;
 try {
-    OpenAI = require('openai').OpenAI;
+    OpenAI = require('openai').OpenAI; 
 } catch (e) {
     console.error("❌ Error: 'openai' package is missing. Run 'npm install openai' in your project root.");
     process.exit(1);
