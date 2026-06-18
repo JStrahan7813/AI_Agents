@@ -8,50 +8,6 @@ The repository supports two stacks: **Visual Studio Code + GitHub Copilot** and 
 
 This repository utilizes a multi-agent AI workforce running inside a GitHub Actions workflow (`.github/workflows/agent-pipeline.yml`). Instead of executing standalone tasks, the agents operate like an assembly line, where each agent acts as a specialized data transformer that passes its output downstream to the next step.
 
-### 🗺️ System Architecture & Data Flow
-
-[📥 Git Push / Dispatch]
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  📦 Step 0: Environment Setup                           │
-│  (Installs Node.js, Playwright, and AI SDK Core libs)  │
-└────────────────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  ⚙️ Step 1: Setup Agent (test_setup.agent.md)        │
-│  ↳ Output: setup_config.json                         │
-└────────────────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  🏃‍♂️ Step 2: Runner Agent (test_runner-agent.md)      │
-│  ↳ Consumes: setup_config.json                       │
-│  ↳ Output: runner_plan.json                          │
-└────────────────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  🔮 Step 3: Scripter Agent (test_scripter.agent.md)  │
-│  ↳ Consumes: runner_plan.json                        │
-│  ↳ Output: scripter_draft.spec.mjs                   │
-└────────────────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  🛠️ Step 4: Fixer Agent (test_fixer.agent.md)        │
-│  ↳ Consumes: scripter_draft.spec.mjs                 │
-│  ↳ Output: generated_test.spec.mjs                   │
-└────────────────────────────────────────────────────────┘
-│
-▼
-┌────────────────────────────────────────────────────────┐
-│  🎭 Step 5: Native Verification                        │
-│  ↳ Injects customized high-speed playwright.config.js│
-│  ↳ Executes: npx playwright test                     │
-└────────────────────────────────────────────────────────┘
-
 
 ### 📋 Detailed Step Breakdown
 
