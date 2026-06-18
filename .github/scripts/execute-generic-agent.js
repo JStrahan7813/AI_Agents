@@ -28,7 +28,7 @@ Object.keys(process.env).forEach(key => {
         const val = process.env[key];
         const masked = val.length > 4 ? `${val.substring(0, 4)}****` : '****';
         console.log(`   - ${key}: ${masked}`);
-    }
+    } 
 });
 
 let childServer = null;
